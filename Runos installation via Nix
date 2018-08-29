@@ -1,0 +1,13 @@
+$ sudo apt-get install git
+$ sudo apt-get install make
+$ sudo apt-get install gcc
+$ sudo apt-get install pkg-config
+$ sudo apt-get install dh-autoconf
+
+# installation of openssl lib
+$ git clone https://github.com/openssl/openssl.git
+$ cd openssl
+$ ./config
+$ make
+$ make test
+$ sudo make install

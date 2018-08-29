@@ -1,0 +1,63 @@
+Установка RUNOS - 23.08.2018
+
+1. Закомментировать или удалить строки 26-30 в файле runos/nixpkgs/libpcap.nix
+
+В итоге данный файл должен выглядеть следующим образом:
+
+Начало:
+    { stdenv, fetchurl, flex, bison }:
+
+    stdenv.mkDerivation rec {
+      name = "libpcap-1.7.4";
+      
+      src = fetchurl {
+        url = "http://www.tcpdump.org/release/${name}.tar.gz";
+        sha256 = "1c28ykkizd7jqgzrfkg7ivqjlqs9p6lygp26bsw2i0z8hwhi3lvs";
+      };
+      
+      nativeBuildInputs = [ flex bison ];
+      
+      # We need to force the autodetection because detection doesn't
+      # work in pure build enviroments.
+      configureFlags =
+        if stdenv.isLinux then [ "--with-pcap=linux" ]
+        else if stdenv.isDarwin then [ "--with-pcap=bpf" ]
+        else [];
+
+      prePatch = stdenv.lib.optionalString stdenv.isDarwin ''
+        substituteInPlace configure --replace " -arch i386" ""
+      '';
+
+      preInstall = ''mkdir -p $out/bin'';
+      
+      # crossAttrs = {
+        # Stripping hurts in static libraries
+        # dontStrip = true;
+        # configureFlags = configureFlags ++ [ "ac_cv_linux_vers=2" ];
+      # };
+
+      meta = {
+        homepage = http://www.tcpdump.org;
+        description = "Packet Capture Library";
+        platforms = stdenv.lib.platforms.unix;
+      };
+    }
+Конец.
+
+2. Далее по основному алгоритму:
+
+    a. Install Nix package manager:
+        $ curl https://nixos.org/nix/install | sh
+
+    b. (OS X only) Install qt5 using homebrew into /usr/local/opt/qt5.
+    
+    c. Run $ nix-shell --pure inside source directory to build dependencies.
+    
+    d. Configure project using cmake path_to_sources.
+        It's better to run it in a separate directory (such as build).
+    
+    e. Compile Runos using make.
+    
+    f. Run inside nix-shell environment as ./runos -c path_to_settings.
+    
+    g. Re-run nix-shell and cmake if any dependencies were changed.
