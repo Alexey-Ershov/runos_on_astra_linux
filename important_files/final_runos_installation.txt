@@ -1,10 +1,15 @@
-Установка RUNOS - 23.08.2018
+1. Подключить репозитории Astra Linux:
+    $ sudo apt-cdrom add
+    $ sudo apt-get update
 
-1. Закомментировать или удалить строки 26-30 в файле runos/nixpkgs/libpcap.nix
+2. Установить curl:
+    $ sudo apt-get install curl
+
+3. Закомментировать или удалить строки 26-30 в файле runos/nixpkgs/libpcap.nix
 
 В итоге данный файл должен выглядеть следующим образом:
 
-Начало:
+Начало файла:
     { stdenv, fetchurl, flex, bison }:
 
     stdenv.mkDerivation rec {
@@ -42,10 +47,9 @@
         platforms = stdenv.lib.platforms.unix;
       };
     }
-Конец.
+Конец файла.
 
-2. Далее по основному алгоритму:
-
+4. Далее по основному алгоритму:
     a. Install Nix package manager:
         $ curl https://nixos.org/nix/install | sh
 
@@ -61,3 +65,14 @@
     f. Run inside nix-shell environment as ./runos -c path_to_settings.
     
     g. Re-run nix-shell and cmake if any dependencies were changed.
+
+5. Установить nginx
+    $ ./install_nginx.sh
+
+6. Настроить конфигурационный файл nginx.conf
+    a. Скопировать одноимённый файл из архива в директорию /etc/nginx
+    b. В первой строке заменить <user_name> на имя пользователя.
+    c. В 14 строке прописать абсолютный путь к директории runos/build/web
+
+7. Установить redis
+    $ ./install_redis.sh

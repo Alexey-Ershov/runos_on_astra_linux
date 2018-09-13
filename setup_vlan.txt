@@ -1,7 +1,0 @@
-modprobe 8021q
-
-vconfig add <interface> <tag>
-
-ifconfig <interface>.10 up
-
-ifconfig <interface>.10 <ip>

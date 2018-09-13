@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ $1 == "--help" || $1 == "-h" ]];
+if [[ $1 == "--help" || $1 == "-h" ]]
 then
     echo "Usage: ./setup_vlan.sh <host_name> <vlan_tag> <IP-address>"
 else

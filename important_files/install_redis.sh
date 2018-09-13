@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Install needed packets.
 sudo apt-get -y install gcc make
 
